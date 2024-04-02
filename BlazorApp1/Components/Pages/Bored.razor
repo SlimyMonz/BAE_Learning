@@ -1,0 +1,53 @@
+@page "/bored"
+@attribute [StreamRendering]
+@inject HttpClient HttpClient
+
+<PageTitle>Bored API</PageTitle>
+
+<h1>Bored API</h1>
+
+<p>This component demonstrates utilization of Bored API.</p>
+<a href="https://www.boredapi.com/documentation">Click this link for info on the API being used.</a>
+<div style="height: 20px;"></div>
+<hr style="border-top: 1px solid black;">
+<div style="height: 20px;"></div>
+
+@if (_activity == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>Activity: @_activity.Activity</p>
+    <p>Accessibility: @_activity.Accessibility</p>
+    <p>Type: @_activity.Type</p>
+    <p>Participants: @_activity.Participants</p>
+    <p>Price: @_activity.Price</p>
+    <p>Key: @_activity.Key</p>
+
+    @if (!string.IsNullOrEmpty(_activity.Link))
+    {
+        <a href="@_activity.Link">Link To Activity</a>
+    }
+}
+
+@code {
+    private ActivityResponse? _activity;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _activity = await HttpClient.GetFromJsonAsync<ActivityResponse>("https://www.boredapi.com/api/activity/");
+    }
+
+    public class ActivityResponse
+    {
+        public string? Activity { get; set; }
+        public double? Accessibility { get; set; }
+        public string? Type { get; set; }
+        public int? Participants { get; set; }
+        public double? Price { get; set; }
+        public string? Link { get; set; }
+        public string? Key { get; set; }
+    }
+
+}
